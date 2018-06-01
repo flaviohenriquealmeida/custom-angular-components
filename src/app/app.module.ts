@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.rounting.module';
 import { DataTableTestComponent } from './datatable-test/data-table-test-component';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
