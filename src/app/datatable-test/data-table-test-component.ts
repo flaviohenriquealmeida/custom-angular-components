@@ -6,17 +6,11 @@ import { DataTableComponent } from "../../shared/components/data-table/data-tabl
 @Component({
     templateUrl: './data-table-test-component.html'
 })
-export class DataTableTestComponent implements OnInit {
-
-    @ViewChild(DataTableComponent) dataTable: DataTableComponent;
-    
+export class DataTableTestComponent  {
+ 
     constructor(private dataModel: MyDataModel) {}
         
-    ngOnInit(): void {
-        this.dataTable.setDataModel(this.dataModel, 14, ['url']);
-    }
-
     select(photo: Photo) {
-        alert(photo.description);
+        alert(`Do some stuff with ${photo.description}`);
     }
 }

@@ -11,9 +11,7 @@ export class PhotoService {
     constructor(private http: HttpClient) { }
 
     paginatedList(userName: string, page: number) {
-        for(let i = 0; i < 10000000000; i++) {
-
-        }
+       
         const params = new HttpParams()
             .append('page', page.toString());
         return this.http.get<Photo[]>(API_URL + '/' + userName + '/photos', { params });

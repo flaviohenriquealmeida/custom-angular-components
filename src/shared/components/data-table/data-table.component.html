@@ -1,29 +1,32 @@
-<div *ngIf="dataList.length; else loading">
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <caption>Favorite Colors</caption>
-            <thead class="thead-light">
-                <th tabindex="0" *ngFor="let columnTitle of columnTitles">{{columnTitle}}</th>
-            </thead>
-            <tbody>
-                <tr tabindex="0" *ngFor="let data of dataList" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
-                    <td tabindex="0" *ngFor="let dataPropety of dataProperties">
+<div *ngIf="dataList.length; else loading" class="table-responsive">
+    <table class="table table-hover">
+        <caption>{{ title }}</caption>
+        <thead class="thead-light">
+            <th tabindex="0" *ngFor="let columnTitle of columnTitles" (click)="sortBy(columnTitle)" (keyup.enter)="sortBy(columnTitle)">
+                {{columnTitle.name}}
+                <my-sortOrientation [sortOrder]="columnTitle.sortOrder"></my-sortOrientation>
+            </th>
+        </thead>
+        <tbody>
+            <tr tabindex="0" *ngFor="let data of dataList" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
+                <td tabindex="0" *ngFor="let dataPropety of dataProperties">
                     {{ data[dataPropety] }}
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td [colSpan]="columnTitles.length">
-                        <ul class="list-unstyled" style="display: flex; justify-content: center;">
-                            <li *ngFor="let dummy of ' '.repeat(pages).split(''), let index = index"><button (click)="load(index + 1)">{{ index + 1}}</button></li>
-                        </ul>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    <ng-template>
-        Loading, please wait...
-    </ng-template>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td [colSpan]="columnTitles.length">
+                    <ul class="list-unstyled" style="display: flex; justify-content: center;">
+                        <li *ngFor="let dummy of ' '.repeat(pages).split(''), let index = index">
+                            <button (click)="load(index + 1)">{{ index + 1}}</button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
+<ng-template #loading>
+    <p class="text-center">Loading data, please wait...</p>
+</ng-template>

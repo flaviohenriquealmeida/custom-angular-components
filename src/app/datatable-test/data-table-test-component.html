@@ -1,6 +1,9 @@
-<h1 class="text-center">Data table test</h1>
-<my-data-table 
-    title="Photos" 
-    [rows]="12" 
-    (onItemSelect)="select($event)">
-</my-data-table>
+<div class="container">
+    <h1 class="text-center">Generic DataTable component</h1>
+    <my-data-table 
+        title="Photos" 
+        [dataModel]="dataModel" 
+        [ignoredDataProperties]="['url', 'likes', 'comments', 'userId']" [rows]="12"
+        (onItemSelect)="select($event)">
+    </my-data-table>
+</div>
