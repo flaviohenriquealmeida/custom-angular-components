@@ -16,6 +16,8 @@ export class DataTableComponent implements OnInit {
 
     private columnTitles: ColumnTitle[] = [];
     private currentPage = 1;
+    private currentSortOrder: SortOrder;
+    private currentSortField: string;
     private dataList: any[] = [];
     private dataProperties: string[] = [];
     private pages = 0;
@@ -23,12 +25,22 @@ export class DataTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.pages = this.calculatePages();
+        this.currentSortOrder =  this.dataModel.getStartingSortOrder();
+        this.currentSortField = this.dataModel.getStartingSortField();
         this.load(1);
     }
 
-    load(page) {
+    load(page: number) {
         this.currentPage = page;
-        this.loadData();
+        this.dataModel.load(this.currentPage, this.rows, this.currentSortField, this.currentSortOrder)
+            .subscribe(dataList => {
+                this.dataList = dataList;
+                if (this.firstLoad) {
+                    this.firstLoad = false;
+                    this.extractColumnProperties(dataList[0]);
+                    this.createColumnTitles();
+                }
+            });
     }
 
     selectItem(item) {
@@ -38,7 +50,10 @@ export class DataTableComponent implements OnInit {
     sortBy(choosenTitle: ColumnTitle) {
         choosenTitle.sortOrder = this.getNewSortOrder(choosenTitle);
         this.updateColumnTitleListWith(choosenTitle);
-        console.log(this.columnTitles);
+        this.currentSortField = choosenTitle.sortProperty;
+        this.currentSortOrder = choosenTitle.sortOrder;
+        this.load(this.currentPage);
+
     }
 
     private calculatePages() {
@@ -60,27 +75,14 @@ export class DataTableComponent implements OnInit {
         return /[A-Z]/.test(letter);
     }
 
-    private loadData() {
-        this.dataModel.load(this.currentPage)
-            .subscribe(dataList => {
-                this.dataList = dataList;
-                if (this.firstLoad) {
-                    this.extractColumnProperties(dataList[0]);
-                    this.createColumnTitles();
-                }
-            });
-    }
-
     private createColumnTitles() {
         this.columnTitles = this.dataProperties
             .map(property => {
                 let title = '';
                 for (let letter of property) {
-                    if (this.isUpperCase(letter)) {
-                        title += ' ' + letter.toLowerCase();
-                    } else {
-                        title += letter;
-                    }
+                    this.isUpperCase(letter)
+                        ? title += ' ' + letter.toLowerCase()
+                        : title += letter;
                 }
                 return {
                     sortOrder: SortOrder.ASCEND,

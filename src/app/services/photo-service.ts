@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Photo } from './photo';
+import { SortOrder } from '../shared/components/data-table/lazy-data-model';
 
 const API_URL = 'http://localhost:3000';
 
@@ -10,28 +11,14 @@ export class PhotoService {
 
     constructor(private http: HttpClient) { }
 
-    paginatedList(userName: string, page: number) {
+    paginatedList(page: number, rows: number, sortField: string, sortOrder: SortOrder) {
        
         const params = new HttpParams()
-            .append('page', page.toString());
-        return this.http.get<Photo[]>(API_URL + '/' + userName + '/photos', { params });
-    }
-
-    remove(photo: Photo) {
-        return this.http.delete(
-            API_URL + '/photos/' + photo.id
-        );
-    }
-
-    findById(id: string) {
-        return this.http.get<Photo>(
-            API_URL + '/photos/' + id
-        );
-    }
-
-    like(photoId: number) {
-        return this.http.post(
-            API_URL + '/photos/' + photoId + '/like', {}, { observe: 'response' }
-        );
+            .append('page', page.toString())
+            .append('sortField', sortField)
+            .append('sortOrder',  sortOrder.valueOf().toString())
+            .append('rows', rows.toString());
+            
+        return this.http.get<Photo[]>(API_URL + '/photos', { params });
     }
 }

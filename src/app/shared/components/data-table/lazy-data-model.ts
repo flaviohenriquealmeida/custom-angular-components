@@ -1,17 +1,24 @@
 import { Observable } from "rxjs";
 
 export abstract class LazyDataModel<T> {
-
-    private rowCount: number = 0;
     
-    constructor(rowCount: number) {
-        this.rowCount = rowCount;
-    }
+    constructor(
+        private rowCount: number,
+        private startingSortField: string, 
+        private startingSortOrder) {}
 
-    abstract load(first:number): Observable<T>;
+    abstract load(page:number, rows: number, sortField: string, sortOrder: SortOrder): Observable<T>;
 
     getRowCount() {
         return this.rowCount;
+    }
+
+    getStartingSortField() {
+        return this.startingSortField;
+    }
+
+    getStartingSortOrder() {
+        return this.startingSortOrder;
     }
 }
 
