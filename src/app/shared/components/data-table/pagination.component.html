@@ -1,0 +1,8 @@
+<ul class="list-unstyled pages">
+    <li 
+        *ngFor="let dummy of ' '.repeat(pages).split(''), let index = index" 
+        class="page-item"
+        [ngClass]="{ selected: isActive(index + 1) }">
+        <button (click)="setCurrentPage(index + 1)">{{ index + 1}}</button>
+    </li>
+</ul>

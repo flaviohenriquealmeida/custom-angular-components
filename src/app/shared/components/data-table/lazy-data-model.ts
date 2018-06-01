@@ -15,10 +15,6 @@ export abstract class LazyDataModel<T> {
     }
 }
 
-
-//Map<String,Object> filters) {
-// load(first:number, pageSize: number, sortField: string, sortOrder: SortOrder): Observable<T>;
-
 export enum SortOrder {
     ASCEND,
     DESCEND

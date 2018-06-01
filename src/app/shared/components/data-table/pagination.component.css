@@ -1,0 +1,12 @@
+.pages {
+    display: flex; 
+    justify-content: center;
+}
+
+.pages .page-item {
+    margin-left: 0.2em;
+}
+.selected {
+    filter: brightness(70%);
+
+}

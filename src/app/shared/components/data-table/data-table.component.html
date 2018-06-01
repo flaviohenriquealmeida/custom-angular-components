@@ -17,11 +17,10 @@
         <tfoot>
             <tr>
                 <td [colSpan]="columnTitles.length">
-                    <ul class="list-unstyled" style="display: flex; justify-content: center;">
-                        <li *ngFor="let dummy of ' '.repeat(pages).split(''), let index = index">
-                            <button (click)="load(index + 1)">{{ index + 1}}</button>
-                        </li>
-                    </ul>
+                    <my-pagination 
+                        [pages]="pages"
+                        (onPageSelect)="load($event)">
+                    </my-pagination>
                 </td>
             </tr>
         </tfoot>
