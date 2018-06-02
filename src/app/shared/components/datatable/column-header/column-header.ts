@@ -4,4 +4,6 @@ export interface ColumnHeader {
     sortOrder: SortOrder;
     sortField: string;
     title: string;
+    filterField: string;
+    filterValue: string
 }

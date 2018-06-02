@@ -1,8 +1,9 @@
-import { Component, Input, EventEmitter, Output, OnInit } from "@angular/core";
+import { Component, Input, EventEmitter, Output, OnInit, ViewChildren } from "@angular/core";
 
 import { ColumnHeader } from "./column-header/column-header";
 import { DataModel, SortOrder } from "./model/datamodel";
-
+import { ColumnHeaderComponent } from "./column-header/column-header.component";
+import { checkAndUpdateTextDynamic } from "@angular/core/src/view/text";
 
 @Component({
     selector: 'my-datatable',
@@ -15,6 +16,9 @@ export class DataTableComponent implements OnInit {
     @Input() rows: number = 5;
     @Input() title: string = '';
     @Output() onItemSelect: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChildren(ColumnHeaderComponent) columnHeaderComponents: ColumnHeaderComponent[];
+
+    filter: ColumnHeader;
 
     private currentPage: number = 1;
     private selectedColumnHeader: ColumnHeader;
@@ -43,6 +47,18 @@ export class DataTableComponent implements OnInit {
                     this.extractFieldsFromSampleObject(sampleObject);
                 }
             });
+    }
+
+    filterBy(columnHeader: ColumnHeader) {
+        this.selectedColumnHeader = columnHeader;
+        this.columnHeaderComponents.forEach(chc => {
+            if (chc.columnHeader != columnHeader) {
+                chc.resetField();
+            }
+        });
+                
+       this.filter = Object.assign({}, columnHeader);
+       
     }
 
     selectItem(item) {

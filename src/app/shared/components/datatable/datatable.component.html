@@ -4,13 +4,16 @@
         <thead class="thead-light">
             <tr>
                 <th *ngFor="let field of fields">
-                    <my-columnHeader (onSelect)="sortBy($event)" [field]="field">
+                    <my-columnHeader 
+                        (onSelect)="sortBy($event)" [field]="field"
+                        (onFilterInput)="filterBy($event)"
+                        >
                     </my-columnHeader>
                 </th>
             </tr>   
         </thead>
         <tbody>
-            <tr tabindex="0" *ngFor="let data of dataList" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
+            <tr tabindex="0" *ngFor="let data of dataList | columnFilter: filter" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
                 <td tabindex="0" *ngFor="let field of fields">
                     {{ data[field] }}
                 </td>

@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { ColumnHeader } from "./column-header";
 import { SortOrder } from "../model/datamodel";
+
+const NO_FILTER = '';
 
 @Component({
     selector: 'my-columnHeader',
@@ -10,7 +12,10 @@ export class ColumnHeaderComponent implements OnInit {
 
     @Input() field: string;
     @Output() onSelect = new EventEmitter<ColumnHeader>();
+    @Output() onFilterInput = new EventEmitter<ColumnHeader>();
     columnHeader: ColumnHeader;
+
+    @ViewChild('inputElement') inputElement: ElementRef<HTMLInputElement>;
 
     ngOnInit(): void {
         this.createColumnHeaderFromField();
@@ -21,11 +26,25 @@ export class ColumnHeaderComponent implements OnInit {
         this.onSelect.emit(this.columnHeader);
     }
 
+    input(filter) {
+        this.columnHeader.filterField = this.columnHeader.sortField;
+        this.columnHeader.filterValue = filter;
+        this.onFilterInput.emit(this.columnHeader);
+    }
+
+    resetField() {
+        this.inputElement.nativeElement.value = '';
+    }
+
     private createColumnHeaderFromField() {
+        const filter = new Map();
+        filter.set(this.field, NO_FILTER);
         this.columnHeader = {
             sortOrder: SortOrder.ASCEND,
             sortField: this.field,
-            title: this.createTitleFromField(this.field)
+            title: this.createTitleFromField(this.field),
+            filterField: '', 
+            filterValue: ''
         };
     }
 

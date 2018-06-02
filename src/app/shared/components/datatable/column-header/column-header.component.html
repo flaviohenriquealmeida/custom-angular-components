@@ -1,4 +1,7 @@
+{{ filter }}
 <span tabindex="0" (click)="select()" (keyup.enter)="select()">
     {{columnHeader.title}}
     <my-sortOrientation [sortOrder]="columnHeader.sortOrder"></my-sortOrientation>
 </span>
+<input #inputElement name="filter" class="d-block" (keyup)="input(inputElement.value)">
+

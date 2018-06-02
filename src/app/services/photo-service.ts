@@ -17,7 +17,7 @@ export class PhotoService {
             .append('page', page.toString())
             .append('sortField', sortField)
             .append('sortOrder',  sortOrder.valueOf().toString())
-            .append('rows', rows.toString());
+            .append('rows', rows.toString())
             
         return this.http.get<Photo[]>(API_URL + '/photos', { params });
     }
