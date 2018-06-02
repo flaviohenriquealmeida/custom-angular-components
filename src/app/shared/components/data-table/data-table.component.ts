@@ -9,36 +9,35 @@ import { PropertyBindingType } from "@angular/compiler";
 export class DataTableComponent implements OnInit {
 
     @Input() dataModel: LazyDataModel<any>;
-    @Input() ignoredDataProperties: string[] = [];
-    @Input() rows = 5;
+    @Input() ignoredFields: string[] = [];
+    @Input() rows:number = 5;
     @Input() title: string = '';
-    @Output() onItemSelect = new EventEmitter();
+    @Output() onItemSelect:EventEmitter<any> = new EventEmitter();
 
-    private columnTitles: ColumnTitle[] = [];
-    private currentPage = 1;
-    private currentSortOrder: SortOrder;
-    private currentSortField: string;
+    private columnMetadatas: ColumnMetadata[] = [];
+    private currentPage:number = 1;
+    private currentColumnMetadata: ColumnMetadata;
     private dataList: any[] = [];
-    private dataProperties: string[] = [];
-    private pages = 0;
-    private firstLoad = true;
+    private fields: string[] = [];
+    private pages:number = 0;
+    private firstLoad:boolean = true;
 
     ngOnInit(): void {
-        this.pages = this.calculatePages();
-        this.currentSortOrder =  this.dataModel.getStartingSortOrder();
-        this.currentSortField = this.dataModel.getStartingSortField();
-        this.load(1);
+        this.calculateNumberOfPages();
+        this.setCurrentDefaultColumnMetadata();
+        this.loadFirstPage();
     }
 
-    load(page: number) {
+    load(page: number): void {
         this.currentPage = page;
-        this.dataModel.load(this.currentPage, this.rows, this.currentSortField, this.currentSortOrder)
+        this.dataModel.load(this.currentPage, this.rows, this.currentColumnMetadata.sortField, this.currentColumnMetadata.sortOrder)
             .subscribe(dataList => {
                 this.dataList = dataList;
                 if (this.firstLoad) {
                     this.firstLoad = false;
-                    this.extractColumnProperties(dataList[0]);
-                    this.createColumnTitles();
+                    const sampleObject = dataList[0];
+                    this.extractFieldsFromSampleObject(sampleObject);
+                    this.createColumnMetadata();
                 }
             });
     }
@@ -47,64 +46,79 @@ export class DataTableComponent implements OnInit {
         this.onItemSelect.emit(item);
     }
 
-    sortBy(choosenTitle: ColumnTitle) {
-        choosenTitle.sortOrder = this.getNewSortOrder(choosenTitle);
-        this.updateColumnTitleListWith(choosenTitle);
-        this.currentSortField = choosenTitle.sortProperty;
-        this.currentSortOrder = choosenTitle.sortOrder;
+    sortBy(columnMetadata: ColumnMetadata) {
+        columnMetadata.sortOrder = this.invertSortOrder(columnMetadata);
+        this.setCurrentColumnMetada(columnMetadata);
+        this.currentColumnMetadata = columnMetadata;
         this.load(this.currentPage);
 
     }
 
-    private calculatePages() {
-        return Math.ceil(this.dataModel.getRowCount() / this.rows);
+    private calculateNumberOfPages(): void {
+        this.pages = Math.ceil(this.dataModel.getRowCount() / this.rows);
     }
 
-    private getNewSortOrder(title: ColumnTitle) {
-        return title.sortOrder == SortOrder.ASCEND 
+    private createTitleFromField(field) {
+        let title = '';
+        for (let letter of field) {
+            this.isUpperCase(letter)
+                ? title += ' ' + letter.toLowerCase()
+                : title += letter;
+        }
+        return title.trim();
+    }
+
+    private createColumnMetadata() {
+        this.columnMetadatas = this.fields
+            .map(field => ({
+                sortOrder: SortOrder.ASCEND,
+                sortField: field,
+                title: this.createTitleFromField(field)
+            }));
+    }
+    
+    private extractFieldsFromSampleObject(data: Object) {
+        this.fields = Object.getOwnPropertyNames(data)
+        .filter(field => !this.ignoredFields.includes(field));
+    }
+
+    private invertSortOrder(title: ColumnMetadata) {
+        return title.sortOrder == SortOrder.ASCEND
             ? SortOrder.DESCEND
             : SortOrder.ASCEND;
     }
-
-    private extractColumnProperties(data: any) {
-        this.dataProperties = Object.getOwnPropertyNames(data)
-            .filter(property => !this.ignoredDataProperties.includes(property));
-    }
-
+    
     private isUpperCase(letter: string) {
         return /[A-Z]/.test(letter);
     }
 
-    private createColumnTitles() {
-        this.columnTitles = this.dataProperties
-            .map(property => {
-                let title = '';
-                for (let letter of property) {
-                    this.isUpperCase(letter)
-                        ? title += ' ' + letter.toLowerCase()
-                        : title += letter;
-                }
-                return {
-                    sortOrder: SortOrder.ASCEND,
-                    sortProperty: property,
-                    name: title.trim()
-                };
-            });
+    private loadFirstPage() {
+        this.load(1);
     }
-    
-    private updateColumnTitleListWith(newTitle: ColumnTitle) {
-        this.columnTitles = this.columnTitles.map(title =>
-            title.sortProperty == newTitle.sortProperty
-                ? newTitle
-                : title
-        );
+
+    // ?
+    private setCurrentColumnMetada(newTitle: ColumnMetadata) {
+        this.columnMetadatas = this.columnMetadatas
+            .map(title => 
+                title.sortField == newTitle.sortField
+                    ? newTitle
+                    : title
+            );
+    }
+
+    private setCurrentDefaultColumnMetadata(): void {
+        this.currentColumnMetadata = {
+            sortOrder: this.dataModel.getStartingSortOrder(),
+            sortField: this.dataModel.getStartingSortField(),
+            title: this.createTitleFromField(this.dataModel.getStartingSortField())
+        }
     }
 }
 
-interface ColumnTitle {
+interface ColumnMetadata {
     sortOrder: SortOrder;
-    sortProperty: string;
-    name: string;
+    sortField: string;
+    title: string;
 }
 
 /*

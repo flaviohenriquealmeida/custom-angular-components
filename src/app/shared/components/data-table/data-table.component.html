@@ -2,21 +2,21 @@
     <table class="table table-hover">
         <caption>{{ title }}</caption>
         <thead class="thead-light">
-            <th tabindex="0" *ngFor="let columnTitle of columnTitles" (click)="sortBy(columnTitle)" (keyup.enter)="sortBy(columnTitle)">
-                {{columnTitle.name}}
-                <my-sortOrientation [sortOrder]="columnTitle.sortOrder"></my-sortOrientation>
+            <th tabindex="0" *ngFor="let columnMetadata of columnMetadatas" (click)="sortBy(columnMetadata)" (keyup.enter)="sortBy(columnMetadata)">
+                {{columnMetadata.title}}
+                <my-sortOrientation [sortOrder]="columnMetadata.sortOrder"></my-sortOrientation>
             </th>
         </thead>
         <tbody>
             <tr tabindex="0" *ngFor="let data of dataList" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
-                <td tabindex="0" *ngFor="let dataPropety of dataProperties">
-                    {{ data[dataPropety] }}
+                <td tabindex="0" *ngFor="let field of fields">
+                    {{ data[field] }}
                 </td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td [colSpan]="columnTitles.length">
+                <td [colSpan]="columnMetadatas.length">
                     <my-pagination 
                         [pages]="pages"
                         (onPageSelect)="load($event)">
