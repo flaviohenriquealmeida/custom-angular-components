@@ -3,8 +3,10 @@
         <caption>{{ title }}</caption>
         <thead class="thead-light">
             <tr>
-                <my-columnHeader #columnHeader (onSelect)="sortBy($event)" *ngFor="let field of fields" [field]="field">
-                </my-columnHeader>
+                <th *ngFor="let field of fields">
+                    <my-columnHeader (onSelect)="sortBy($event)" [field]="field">
+                    </my-columnHeader>
+                </th>
             </tr>   
         </thead>
         <tbody>
