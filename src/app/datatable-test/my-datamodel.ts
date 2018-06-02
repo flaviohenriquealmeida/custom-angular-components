@@ -1,10 +1,11 @@
 import { PhotoService } from "../services/photo-service";
 import { Inject, Injectable } from "@angular/core";
+
 import { Photo } from "../services/photo";
-import { LazyDataModel, SortOrder } from "../shared/components/data-table/lazy-data-model";
+import { DataModel, SortOrder } from "../shared/components/datatable/model/datamodel";
 
 @Injectable({ providedIn: 'root'})
-export class MyDataModel extends LazyDataModel<Photo[]>{
+export class MyDataModel extends DataModel<Photo[]>{
 
     constructor(private photoService: PhotoService) {
         super(12, 'description', SortOrder.ASCEND);

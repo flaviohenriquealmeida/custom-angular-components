@@ -1,9 +1,7 @@
-<div class="container">
+<div class="jumbotron">
     <h1 class="text-center">Generic DataTable component</h1>
-    <my-data-table 
-        title="Photos" 
-        [dataModel]="dataModel" 
-        [rows]="5"
-        (onItemSelect)="select($event)">
-    </my-data-table>
+</div>
+<div class="container">
+    <my-datatable title="Photos" [dataModel]="dataModel" [rows]="5" (onItemSelect)="select($event)">
+    </my-datatable>
 </div>

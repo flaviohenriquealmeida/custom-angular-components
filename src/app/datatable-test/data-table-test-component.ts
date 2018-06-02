@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
-import { MyDataModel } from "./my-data-model";
+import { MyDataModel } from "./my-datamodel";
 import { Photo } from "../services/photo";
-import { DataTableComponent } from "../shared/components/data-table/data-table.component";
+
 
 @Component({
     templateUrl: './data-table-test-component.html'

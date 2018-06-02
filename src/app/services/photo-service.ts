@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Photo } from './photo';
-import { SortOrder } from '../shared/components/data-table/lazy-data-model';
+import { SortOrder } from '../shared/components/datatable/model/datamodel';
 
 const API_URL = 'http://localhost:3000';
 

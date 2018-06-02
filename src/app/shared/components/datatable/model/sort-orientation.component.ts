@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { SortOrder } from "./lazy-data-model";
+import { SortOrder } from "./datamodel";
 
 @Component({
     selector: 'my-sortOrientation',

@@ -2,10 +2,10 @@
     <table class="table table-hover">
         <caption>{{ title }}</caption>
         <thead class="thead-light">
-            <th tabindex="0" *ngFor="let columnMetadata of columnMetadatas" (click)="sortBy(columnMetadata)" (keyup.enter)="sortBy(columnMetadata)">
-                {{columnMetadata.title}}
-                <my-sortOrientation [sortOrder]="columnMetadata.sortOrder"></my-sortOrientation>
-            </th>
+            <tr>
+                <my-columnHeader #columnHeader (onSelect)="sortBy($event)" *ngFor="let field of fields" [field]="field">
+                </my-columnHeader>
+            </tr>   
         </thead>
         <tbody>
             <tr tabindex="0" *ngFor="let data of dataList" (click)="selectItem(data)" (keyup.enter)="selectItem(data)">
@@ -16,7 +16,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td [colSpan]="columnMetadatas.length">
+                <td [colSpan]="dataList.length">
                     <my-pagination 
                         [pages]="pages"
                         (onPageSelect)="load($event)">

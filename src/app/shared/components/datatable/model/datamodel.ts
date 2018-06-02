@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 
-export abstract class LazyDataModel<T> {
+export abstract class DataModel<T> {
     
     constructor(
         private rowCount: number,
